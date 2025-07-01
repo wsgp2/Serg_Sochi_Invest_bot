@@ -275,7 +275,12 @@ async def get_pdf_handler(callback: CallbackQuery, state: FSMContext):
 
 Для получения презентации укажите ваше имя:"""
     
-    await callback.message.edit_text(text)
+    # Проверяем тип сообщения - фото или текст
+    if callback.message.photo:
+        await callback.message.edit_caption(caption=text, reply_markup=None)
+    else:
+        await callback.message.edit_text(text, reply_markup=None)
+    
     await state.set_state(PDFForm.waiting_name)
     await callback.answer()
 
@@ -286,10 +291,17 @@ async def show_villas_handler(callback: CallbackQuery):
 
 Обе виллы расположены в премиальном районе ФТ «Сириус» с панорамным видом на море:"""
     
-    await callback.message.edit_text(
-        text,
-        reply_markup=get_villas_keyboard()
-    )
+    # Проверяем тип сообщения - фото или текст
+    if callback.message.photo:
+        await callback.message.edit_caption(
+            caption=text,
+            reply_markup=get_villas_keyboard()
+        )
+    else:
+        await callback.message.edit_text(
+            text,
+            reply_markup=get_villas_keyboard()
+        )
     await callback.answer()
 
 @dp.callback_query(F.data.startswith("villa"))
@@ -299,11 +311,17 @@ async def villa_handler(callback: CallbackQuery):
     villa = VILLA_DATA.get(villa_id)
     
     if villa:
-        await callback.message.edit_text(
-            villa["description"],
-            reply_markup=get_villa_keyboard(villa_id),
-            parse_mode="Markdown"
-        )
+        # Проверяем тип сообщения - фото или текст
+        if callback.message.photo:
+            await callback.message.edit_caption(
+                caption=villa["description"],
+                reply_markup=get_villa_keyboard(villa_id)
+            )
+        else:
+            await callback.message.edit_text(
+                villa["description"],
+                reply_markup=get_villa_keyboard(villa_id)
+            )
     await callback.answer()
 
 @dp.callback_query(F.data.startswith("photos_"))
@@ -426,7 +444,12 @@ async def book_viewing_handler(callback: CallbackQuery, state: FSMContext):
     else:
         text = "📅 <b>Запись на просмотр</b>\n\nДля записи на просмотр укажите ваше имя:"
     
-    await callback.message.edit_text(text)
+    # Проверяем тип сообщения - фото или текст
+    if callback.message.photo:
+        await callback.message.edit_caption(caption=text, reply_markup=None)
+    else:
+        await callback.message.edit_text(text, reply_markup=None)
+    
     await state.set_state(ViewingForm.waiting_name)
     
     # Защита от истекших callback query
@@ -461,10 +484,17 @@ async def compare_villas_handler(callback: CallbackQuery):
         [InlineKeyboardButton(text="🔙 К выбору вилл", callback_data="show_villas")]
     ]
     
-    await callback.message.edit_text(
-        text,
-        reply_markup=InlineKeyboardMarkup(inline_keyboard=keyboard)
-    )
+    # Проверяем тип сообщения - фото или текст
+    if callback.message.photo:
+        await callback.message.edit_caption(
+            caption=text,
+            reply_markup=InlineKeyboardMarkup(inline_keyboard=keyboard)
+        )
+    else:
+        await callback.message.edit_text(
+            text,
+            reply_markup=InlineKeyboardMarkup(inline_keyboard=keyboard)
+        )
     await callback.answer()
 
 @dp.callback_query(F.data == "location_info")
@@ -501,10 +531,17 @@ async def location_info_handler(callback: CallbackQuery):
         [InlineKeyboardButton(text="📅 Записаться на просмотр", callback_data="book_viewing")]
     ]
     
-    await callback.message.edit_text(
-        text,
-        reply_markup=InlineKeyboardMarkup(inline_keyboard=keyboard)
-    )
+    # Проверяем тип сообщения - фото или текст
+    if callback.message.photo:
+        await callback.message.edit_caption(
+            caption=text,
+            reply_markup=InlineKeyboardMarkup(inline_keyboard=keyboard)
+        )
+    else:
+        await callback.message.edit_text(
+            text,
+            reply_markup=InlineKeyboardMarkup(inline_keyboard=keyboard)
+        )
     await callback.answer()
 
 @dp.callback_query(F.data == "location_photos")
@@ -562,18 +599,30 @@ async def mortgage_info_handler(callback: CallbackQuery):
         [InlineKeyboardButton(text="🏠 Смотреть виллы", callback_data="show_villas")]
     ]
     
-    await callback.message.edit_text(
-        text,
-        reply_markup=InlineKeyboardMarkup(inline_keyboard=keyboard)
-    )
+    # Проверяем тип сообщения - фото или текст
+    if callback.message.photo:
+        await callback.message.edit_caption(
+            caption=text,
+            reply_markup=InlineKeyboardMarkup(inline_keyboard=keyboard)
+        )
+    else:
+        await callback.message.edit_text(
+            text,
+            reply_markup=InlineKeyboardMarkup(inline_keyboard=keyboard)
+        )
     await callback.answer()
 
 @dp.callback_query(F.data == "request_calculation")
 async def request_calculation_handler(callback: CallbackQuery, state: FSMContext):
     """Запрос расчёта ипотеки"""
-    await callback.message.edit_text(
-        "📊 <b>Запрос расчёта ипотеки</b>\n\nДля подготовки индивидуального расчёта укажите ваше имя:"
-    )
+    text = "📊 <b>Запрос расчёта ипотеки</b>\n\nДля подготовки индивидуального расчёта укажите ваше имя:"
+    
+    # Проверяем тип сообщения - фото или текст
+    if callback.message.photo:
+        await callback.message.edit_caption(caption=text, reply_markup=None)
+    else:
+        await callback.message.edit_text(text, reply_markup=None)
+    
     await state.set_state(ViewingForm.waiting_name)
     await state.update_data(calculation_request=True)
     await callback.answer()
@@ -592,10 +641,17 @@ async def back_to_start_handler(callback: CallbackQuery):
 
 Выберите действие:"""
     
-    await callback.message.edit_text(
-        welcome_text,
-        reply_markup=get_start_keyboard()
-    )
+    # Проверяем тип сообщения - фото или текст
+    if callback.message.photo:
+        await callback.message.edit_caption(
+            caption=welcome_text,
+            reply_markup=get_start_keyboard()
+        )
+    else:
+        await callback.message.edit_text(
+            welcome_text,
+            reply_markup=get_start_keyboard()
+        )
     await callback.answer()
 
 # Команды статистики (только для служебного чата)
