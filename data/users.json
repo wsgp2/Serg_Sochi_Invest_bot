@@ -1,0 +1,24 @@
+{
+  "531712920": {
+    "first_name": "Сергей",
+    "last_name": "Дышкант",
+    "username": "Sergei_dyshkant",
+    "first_interaction": "2025-07-01T23:48:58.853728",
+    "interactions": [
+      {
+        "action": "start",
+        "time": "2025-07-01T23:48:58.853728",
+        "chat_id": -4882964517
+      },
+      {
+        "action": "start",
+        "time": "2025-07-01T23:52:47.037357",
+        "chat_id": 531712920
+      }
+    ],
+    "total_interactions": 2,
+    "is_bot": false,
+    "language_code": "ru",
+    "last_interaction": "2025-07-01T23:52:47.037357"
+  }
+}

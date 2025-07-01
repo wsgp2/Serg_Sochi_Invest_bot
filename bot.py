@@ -34,7 +34,8 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Инициализация бота
-bot = Bot(token=config.BOT_TOKEN)
+from aiogram.client.default import DefaultBotProperties
+bot = Bot(token=config.BOT_TOKEN, default=DefaultBotProperties(parse_mode='HTML'))
 storage = MemoryStorage()
 dp = Dispatcher(storage=storage)
 
@@ -65,7 +66,7 @@ VILLA_DATA = {
 🛠 Премиальный фасад KMEW · CLADBOARD
 💡 Все центральные коммуникации (газ, вода, эл-во)
 
-💰 **Цена: 280 млн ₽**"""
+💰 <b>Цена: 280 млн ₽</b>"""
     },
     "villa2": {
         "name": "Вилла №2 — «Панорама 240»",
@@ -81,29 +82,52 @@ VILLA_DATA = {
 🛠 Премиальный фасад KMEW · CLADBOARD
 💡 Все центральные коммуникации (газ, вода, эл-во)
 
-💰 **Цена: 200 млн ₽**"""
+💰 <b>Цена: 200 млн ₽</b>"""
     }
 }
+
+def format_phone(phone: str) -> str:
+    """Форматирование телефона - добавление + в начале"""
+    if phone and not phone.startswith('+'):
+        return f"+{phone}"
+    return phone
 
 async def send_to_service_chat(lead_type: str, data: Dict[str, Any]):
     """Отправка лида в служебный чат"""
     try:
+        # Форматируем телефон
+        phone = format_phone(data.get('phone', ''))
+        
+        # Форматируем username
+        username = data.get('username', '')
+        username_text = f"@{username}" if username else 'Не указан'
+        
         if lead_type == "pdf":
             message = f"""🔔 Новый лид (PDF)
 Имя: {data['name']}
-Телефон: {data['phone']}
+Телефон: {phone}
+Телеграм: {username_text}
 Источник: {data.get('utm_source', 'Direct')}
 Время: {datetime.now().strftime('%d.%m.%Y %H:%M:%S')}"""
         
         elif lead_type == "viewing":
             villa_info = VILLA_DATA.get(data['villa'], {})
-            villa_name = villa_info.get('name', data['villa'])
-            villa_details = f"{villa_info.get('area', '')} · {villa_info.get('price', '')}"
+            
+            # Определяем название объекта
+            if villa_info:
+                villa_name = villa_info['name']
+                villa_details = f"{villa_info['area']} · {villa_info['price']}"
+                object_text = f"{villa_name} ({villa_details})"
+            elif data['villa'] == "Расчёт ипотеки":
+                object_text = "Расчёт ипотеки"
+            else:
+                object_text = "Общий запрос"
             
             message = f"""🏡 Лид на просмотр
-Объект: {villa_name} ({villa_details})
+Объект: {object_text}
 Имя: {data['name']}
-Телефон: {data['phone']}
+Телефон: {phone}
+Телеграм: {username_text}
 Бюджет: {data['budget']}
 Время звонка: {data['time']}
 UTM: {data.get('utm_source', 'Direct')}
@@ -136,7 +160,7 @@ def get_villas_keyboard() -> InlineKeyboardMarkup:
 def get_villa_keyboard(villa_id: str) -> InlineKeyboardMarkup:
     keyboard = [
         [InlineKeyboardButton(text="📸 Показать фото", callback_data=f"photos_{villa_id}")],
-        [InlineKeyboardButton(text="📋 Планировка", callback_data=f"planning_{villa_id}")],
+        [InlineKeyboardButton(text="🎥 Видеообзор", callback_data=f"video_{villa_id}")],
         [InlineKeyboardButton(text="📅 Записаться на просмотр", callback_data=f"book_{villa_id}")],
         [InlineKeyboardButton(text="🔙 К выбору вилл", callback_data="show_villas")]
     ]

@@ -12,8 +12,8 @@ cp env_production .env
 
 ```
 # Telegram Bot Configuration for Sochi Invest Bot
-BOT_TOKEN=7168831956:AAGVqy8aNm4WYER8hgNSCtJJslSRlSxCKlU
-SERVICE_CHAT_ID=-4882964517
+BOT_TOKEN=END
+SERVICE_CHAT_ID=END
 
 # Дополнительные настройки
 DEBUG=False

@@ -26,7 +26,7 @@ async def on_startup():
         try:
             await bot.send_message(
                 config.SERVICE_CHAT_ID,
-                f"🤖 **Sochi Invest Bot запущен!**\n\n✅ Готов к работе\n🔗 @{bot_info.username}"
+                f"🤖 <b>Sochi Invest Bot запущен!</b>\n\n✅ Готов к работе\n🔗 @{bot_info.username}"
             )
         except:
             pass

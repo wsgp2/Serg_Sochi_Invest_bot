@@ -12,7 +12,7 @@ load_dotenv()
 
 # Telegram Bot Settings
 BOT_TOKEN = os.getenv("BOT_TOKEN", "YOUR_BOT_TOKEN_HERE")
-SERVICE_CHAT_ID = os.getenv("SERVICE_CHAT_ID", "YOUR_SERVICE_CHAT_ID")
+SERVICE_CHAT_ID = int(os.getenv("SERVICE_CHAT_ID", "-4882964517"))
 
 # Ограничения
 RATE_LIMIT_PHOTOS = 3  # максимум фото в минуту на пользователя
@@ -25,7 +25,7 @@ DEVELOPER_USERNAME = "@sergei_dyshkant"
 
 # Сообщения
 MESSAGES = {
-    "developer_info": "💡 **Хотите такого же бота для вашего бизнеса?**\nОбращайтесь к разработчику: @sergei_dyshkant",
+    "developer_info": "💡 <b>Хотите такого же бота для вашего бизнеса?</b>\nОбращайтесь к разработчику: @sergei_dyshkant",
     "rate_limit": "⏱ Пожалуйста, подождите немного перед следующим запросом фотографий"
 }
 
