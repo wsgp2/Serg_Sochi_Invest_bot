@@ -1,0 +1,20 @@
+[Unit]
+Description=Sochi Invest Bot - Telegram Bot для продажи вилл ПАНОРАМА 240
+After=network.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu/bots/sochi_invest_bot
+ExecStart=/home/ubuntu/bots/sochi_invest_bot/venv/bin/python3 start_bot.py
+Restart=always
+RestartSec=10
+StandardOutput=append:/home/ubuntu/bots/sochi_invest_bot/logs/sochi_invest_bot.log
+StandardError=append:/home/ubuntu/bots/sochi_invest_bot/logs/sochi_invest_bot.log
+Environment=PYTHONPATH=/home/ubuntu/bots/sochi_invest_bot
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target 
