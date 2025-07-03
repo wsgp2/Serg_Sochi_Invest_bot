@@ -151,7 +151,6 @@ def get_menu_keyboard() -> InlineKeyboardMarkup:
         [InlineKeyboardButton(text="📄 Смотреть виллы", callback_data="show_villas")],
         [InlineKeyboardButton(text="🔄 Сравнить виллы", callback_data="compare_villas")],
         [InlineKeyboardButton(text="🗺 О локации Сириус", callback_data="location_info")],
-        [InlineKeyboardButton(text="💳 Ипотека / рассрочка", callback_data="mortgage_info")],
         [InlineKeyboardButton(text="👨‍💻 Хочешь такого бота?", url="https://t.me/m/KL5XwR0sMWEy")]
     ]
     return InlineKeyboardMarkup(inline_keyboard=keyboard)
@@ -310,7 +309,7 @@ async def compare_villas_handler(callback: CallbackQuery):
 | **Площадь** | 244 м² | 242 м² |
 | **Участок** | 4,08 сот. | 4,05 сот. |
 | **Цена** | 280 млн ₽ | 200 млн ₽ |
-| **Статус** | Готова | Готова |
+| **Статус** | Готова | Строится |
 | **Бассейн** | Compass Brilliant 77 | Compass Brilliant 77 |
 | **Вид** | 180° море + горы | 180° море + горы |
 
@@ -371,54 +370,7 @@ async def location_info_handler(callback: CallbackQuery):
     )
     await callback.answer()
 
-@dp.callback_query(F.data == "mortgage_info")
-async def mortgage_info_handler(callback: CallbackQuery):
-    """Информация об ипотеке"""
-    text = """💳 **Ипотека и рассрочка**
 
-🏦 **Ипотечные программы:**
-• Льготная ипотека от 8,9%
-• Первоначальный взнос от 20%
-• Срок кредитования до 25 лет
-• Возможность рефинансирования
-
-💰 **Рассрочка от застройщика:**
-• Без процентов до 24 месяцев
-• Первоначальный взнос от 30%
-• Гибкий график платежей
-
-📊 **Пример расчёта (Вилла №1 - 280 млн ₽):**
-• Первоначальный взнос: 56 млн ₽ (20%)
-• Сумма кредита: 224 млн ₽
-• Ежемесячный платёж: ~2,1 млн ₽ (при 9% на 15 лет)
-
-📈 **Окупаемость через аренду:**
-• Доходность: 8-12% годовых
-• Стоимость суток: 50-80 тыс. ₽
-• Загрузка: 150-200 дней в году
-
-*Расчёт индивидуален и зависит от банка"""
-
-    keyboard = [
-        [InlineKeyboardButton(text="📊 Запросить точный расчёт", callback_data="request_calculation")],
-        [InlineKeyboardButton(text="🏠 Смотреть виллы", callback_data="show_villas")]
-    ]
-    
-    await callback.message.edit_text(
-        text,
-        reply_markup=InlineKeyboardMarkup(inline_keyboard=keyboard)
-    )
-    await callback.answer()
-
-@dp.callback_query(F.data == "request_calculation")
-async def request_calculation_handler(callback: CallbackQuery, state: FSMContext):
-    """Запрос расчёта ипотеки"""
-    await callback.message.edit_text(
-        "📊 **Запрос расчёта ипотеки**\n\nДля подготовки индивидуального расчёта укажите ваше имя:"
-    )
-    await state.set_state(ViewingForm.waiting_name)
-    await state.update_data(calculation_request=True)
-    await callback.answer()
 
 @dp.callback_query(F.data == "back_to_start")
 async def back_to_start_handler(callback: CallbackQuery):
@@ -512,26 +464,6 @@ async def viewing_phone_handler(message: Message, state: FSMContext):
     
     if phone:
         await state.update_data(phone=phone)
-        
-        data = await state.get_data()
-        if data.get("calculation_request"):
-            # Завершаем запрос расчёта
-            await state.clear()
-            await send_to_service_chat("viewing", {
-                "name": data["name"],
-                "phone": phone,
-                "villa": "Расчёт ипотеки",
-                "budget": "Индивидуальный расчёт",
-                "time": "В рабочее время",
-                "utm_source": "Direct"
-            })
-            
-            await message.answer(
-                "✅ **Запрос принят!**\n\n" +
-                "Наш менеджер подготовит индивидуальный расчёт ипотеки и свяжется с вами в течение 15 минут.",
-                reply_markup=ReplyKeyboardRemove()
-            )
-            return
         
         await message.answer(
             "💰 Какой у вас предполагаемый бюджет?",

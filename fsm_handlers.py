@@ -119,44 +119,7 @@ async def viewing_phone_handler(message: Message, state: FSMContext):
         
         data = await state.get_data()
         
-        # Проверяем, это запрос расчёта ипотеки
-        if data.get("calculation_request"):
-            # Завершаем запрос расчёта
-            await state.clear()
-            
-            # Сохраняем лид в файл
-            await log_lead(message.from_user.id, "viewing", {
-                "name": data["name"],
-                "phone": phone,
-                "username": message.from_user.username,
-                "villa": "Расчёт ипотеки",
-                "budget": "Индивидуальный расчёт",
-                "time": "В рабочее время",
-                "utm_source": "Direct"
-            })
-            
-            await send_to_service_chat("viewing", {
-                "name": data["name"],
-                "phone": phone,
-                "username": message.from_user.username,
-                "villa": "Расчёт ипотеки",
-                "budget": "Индивидуальный расчёт",
-                "time": "В рабочее время",
-                "utm_source": "Direct"
-            })
-            
-            await message.answer(
-                "✅ <b>Запрос принят!</b>\n\n" +
-                "Наш менеджер подготовит индивидуальный расчёт ипотеки и свяжется с вами в течение 15 минут.\n\n" +
-                "💡 А пока изучите информацию о виллах:",
-                reply_markup=ReplyKeyboardRemove()
-            )
-            
-            await message.answer(
-                "Дополнительные возможности:",
-                reply_markup=get_menu_keyboard()
-            )
-            return
+
         
         await message.answer(
             "💰 Какой у вас предполагаемый бюджет?",

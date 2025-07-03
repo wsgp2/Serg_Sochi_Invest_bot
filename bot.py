@@ -118,8 +118,7 @@ async def send_to_service_chat(lead_type: str, data: Dict[str, Any]):
                 villa_name = villa_info['name']
                 villa_details = f"{villa_info['area']} · {villa_info['price']}"
                 object_text = f"{villa_name} ({villa_details})"
-            elif data['villa'] == "Расчёт ипотеки":
-                object_text = "Расчёт ипотеки"
+
             else:
                 object_text = "Общий запрос"
             
@@ -185,7 +184,6 @@ def get_menu_keyboard() -> InlineKeyboardMarkup:
         [InlineKeyboardButton(text="📄 Смотреть виллы", callback_data="show_villas")],
         [InlineKeyboardButton(text="🔄 Сравнить виллы", callback_data="compare_villas")],
         [InlineKeyboardButton(text="🗺 О локации Сириус", callback_data="location_info")],
-        [InlineKeyboardButton(text="💳 Ипотека / рассрочка", callback_data="mortgage_info")],
         [InlineKeyboardButton(text="👨‍💻 Хочешь такого бота?", url=config.DEVELOPER_URL)]
     ]
     return InlineKeyboardMarkup(inline_keyboard=keyboard) 
