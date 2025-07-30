@@ -647,7 +647,7 @@ async def users_handler(message: Message):
 # Команда отладки
 @dp.message(Command("debug"))
 async def debug_handler(message: Message):
-    """Отладочная информация о чате и настройках"""
+    """Отладочная информация о чате исе  настройках"""
     from config import SERVICE_CHAT_ID
     
     debug_text = f"""🔧 <b>Отладочная информация</b>
